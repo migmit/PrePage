@@ -41,22 +41,16 @@ class TextStyle {
     toClose.reverse();
     var closingTags = toClose.map(function(tag) return tag.closing()).join("");
     var stillOpen = open.slice(0, firstWrong);
-    var oldStyle = fromTags(stillOpen);
     var newOpen = [];
-    if (bold && !oldStyle.bold) newOpen.push(Bold);
-    if (italic && !oldStyle.italic) newOpen.push(Italic);
+    if (bold && stillOpen.indexOf(Bold) < 0) newOpen.push(Bold);
+    if (italic && stillOpen.indexOf(Italic) < 0) newOpen.push(Italic);
+    var oldColor = stillOpen.find(function(tag) {switch(tag) {case Color(_): return true; case _: return false;}});
     switch(color) {
-    case Just(c) if (!oldStyle.color.isDefined()): newOpen.push(Color(c));
+    case Just(c) if (!oldColor.isDefined()): newOpen.push(Color(c));
     case _:
     }
     var openingTags = newOpen.map(function(tag) return tag.opening()).join("");
     return new Pair(closingTags + openingTags, stillOpen.concat(newOpen));
-  }
-  static function fromTags(tags: Array<Tag>): TextStyle {
-    var boldIndex = tags.indexOf(Bold);
-    var italicIndex = tags.indexOf(Italic);
-    var tagColor = tags.onLast(function(tag) {switch(tag){case Color(c): return Just(c); case _: return Nothing;}});
-    return new TextStyle(boldIndex >= 0, italicIndex >= 0, tagColor);
   }
   static public var dflt = new TextStyle(false, false, Nothing);
 }
