@@ -23,4 +23,7 @@ class MaybeExt {
   static public function flatMap<T,U>(m: Maybe<T>, f: T -> Maybe<U>): Maybe<U> {
     return m.map(f).getOrElse(Nothing);
   }
+  static public function isDefined<T>(m: Maybe<T>): Bool {
+    return m.map(function(_) return true).getOrElse(false);
+  }
 }

@@ -23,4 +23,14 @@ class ArrayExt {
     }
     return r;
   }
+  static public function onLast<T, U>(a: Array<T>, f: T -> Maybe<U>): Maybe<U> {
+    for (i in a.length...0) {
+      var u = f(a[-i-1]);
+      switch(u) {
+      case Just(result): return Just(result);
+      case Nothing:
+      }
+    }
+    return Nothing;
+  }
 }
