@@ -110,4 +110,7 @@ class Text<S> {
       }
     }
   }
+  public function render(): String {
+    return value.map(function(s) return s.render()).join("");
+  }
 }

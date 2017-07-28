@@ -24,33 +24,15 @@ class TextStyle {
     case Nothing: return false;
     }
   }
-  function findCommon(open: Array<Tag>): Int {
-    for (i in 0...open.length) {
-      switch(open[i]) {
-      case Bold if (!bold): return i;
-      case Italic if (!italic): return i;
-      case Color(c) if (!hasColor(c)): return i;
-      case _:
-      }
-    }
-    return open.length;
-  }
-  public function render(open: Array<Tag>): Pair<String, Array<Tag>> {
-    var firstWrong = findCommon(open);
-    var toClose = open.slice(firstWrong);
-    toClose.reverse();
-    var closingTags = toClose.map(function(tag) return tag.closing()).join("");
-    var stillOpen = open.slice(0, firstWrong);
-    var newOpen = [];
-    if (bold && stillOpen.indexOf(Bold) < 0) newOpen.push(Bold);
-    if (italic && stillOpen.indexOf(Italic) < 0) newOpen.push(Italic);
-    var oldColor = stillOpen.find(function(tag) {switch(tag) {case Color(_): return true; case _: return false;}});
+  public function toTags(): Array<Tag> {
+    var result = [];
+    if (bold) result.push(Bold);
+    if (italic) result.push(Italic);
     switch(color) {
-    case Just(c) if (!oldColor.isDefined()): newOpen.push(Color(c));
-    case _:
+    case Just(c): result.push(Color(c));
+    case Nothing:
     }
-    var openingTags = newOpen.map(function(tag) return tag.opening()).join("");
-    return new Pair(closingTags + openingTags, stillOpen.concat(newOpen));
+    return result;
   }
   static public var dflt = new TextStyle(false, false, Nothing);
 }
