@@ -1,18 +1,7 @@
-import prelude.Maybe;
-import prelude.Pair;
-
-import text.Action;
-import text.Alignment;
 import text.Slice;
 import text.Text;
 import text.TextColor;
 import text.TextStyle;
-
-using StringTools;
-
-using prelude.Maybe.MaybeExt;
-using prelude.Array.ArrayExt;
-using prelude.String.StringExt;
 
 class Main {
   static public function main() {
