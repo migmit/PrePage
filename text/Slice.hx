@@ -19,12 +19,12 @@ class Slice<S> {
     return text.length;
   }
   public function split(index: Int): Pair<Slice<S>, Slice<S>> {
-    return new Pair(new Slice(text.substring(0, index).trimRight(), style, action), new Slice(text.substring(index).trimLeft(), style, action));
+    return Pair(new Slice(text.substring(0, index).trimRight(), style, action), new Slice(text.substring(index).trimLeft(), style, action));
   }
   public function spaceSplit(lastIndex: Int): Maybe<Pair<Slice<S>, Slice<S>>> {
     var pos = text.lastIndexOf(" ", lastIndex);
     if (pos < 0) return Nothing;
-    return Just(new Pair(new Slice(text.substring(0, pos).trimRight(), style, action), new Slice(text.substring(pos+1).trimLeft(), style, action)));
+    return Just(Pair(new Slice(text.substring(0, pos).trimRight(), style, action), new Slice(text.substring(pos+1).trimLeft(), style, action)));
   }
   public function trimLeft(): Slice<S> {
     return new Slice(text.trimLeft(), style, action);

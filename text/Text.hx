@@ -23,7 +23,7 @@ class Text<S> {
     var p = 0;
     for (i in 0...value.length) {
       var newP = p + value[i].length();
-      if (newP > w) return Just(new Pair(i, w-p));
+      if (newP > w) return Just(Pair(i, w-p));
       p = newP;
     }
     return Nothing;
@@ -69,44 +69,46 @@ class Text<S> {
     }
   }
   function splitWidthFirst(w: Int): Pair<Text<S>, Maybe<Text<S>>> {
-    return findSliceByWidth(w).map(function(sliceIndexAndPos) {
-	var sliceIndex = sliceIndexAndPos.fst;
-	var pos = sliceIndexAndPos.snd;
-	var p = pos;
-	var slice = value[sliceIndex];
-	for (i in -sliceIndex...1) {
-	  switch(slice.spaceSplit(p)) {
-	  case Just(splitResult):
-	    var head = value.slice(0, -i);
-	    head.push(splitResult.fst);
-	    var tail = value.slice(-i+1);
-	    tail.insert(0, splitResult.snd);
-	    return new Pair(new Text(head).trimRight(), Just(new Text(tail).trimLeft()));
-	  case Nothing:
-	    if (i < 0) {
-	      slice = value[-i-1];
-	      p = slice.length();
+    return findSliceByWidth(w).map(function(sliceIndexAndPos) return switch(sliceIndexAndPos) {case Pair(sliceIndex, pos):
+	  var p = pos;
+	  var slice = value[sliceIndex];
+	  for (i in -sliceIndex...1) {
+	    switch(slice.spaceSplit(p)) {
+	    case Just(Pair(splitHead, splitTail)):
+	      var head = value.slice(0, -i);
+	      head.push(splitHead);
+	      var tail = value.slice(-i+1);
+	      tail.insert(0, splitTail);
+	      return Pair(new Text(head).trimRight(), Just(new Text(tail).trimLeft()));
+	    case Nothing:
+	      if (i < 0) {
+		slice = value[-i-1];
+		p = slice.length();
+	      }
 	    }
 	  }
-	}
-	slice = value[sliceIndex];
-	var splitResult = slice.split(pos);
-	var head = value.slice(0, sliceIndex);
-	head.push(splitResult.fst);
-	var tail = value.slice(sliceIndex+1);
-	tail.insert(0, splitResult.snd);
-	return new Pair(new Text(head).trimRight(), Just(new Text(tail).trimLeft()));
-      }).getOrElse(new Pair(this, Nothing));
+	  slice = value[sliceIndex];
+	  switch(slice.split(pos)) {
+	  case Pair(splitHead, splitTail):
+	    var head = value.slice(0, sliceIndex);
+	    head.push(splitHead);
+	    var tail = value.slice(sliceIndex+1);
+	    tail.insert(0, splitTail);
+	    return Pair(new Text(head).trimRight(), Just(new Text(tail).trimLeft()));
+	  }
+      }).getOrElse(Pair(this, Nothing));
   }
   public function splitWidth(w: Int, alignment: Alignment): Array<Text<S>> {
     var result = [];
     var currentText = this;
     while(true) {
-      var swf = currentText.splitWidthFirst(w);
-      result.push(swf.fst);
-      switch(swf.snd) {
-      case Just(rest): currentText = rest;
-      case Nothing: return result.map(function(text) return text.pad(w, alignment));
+      switch(currentText.splitWidthFirst(w)) {
+      case Pair(firstLine, restLines):
+	result.push(firstLine);
+	switch(restLines) {
+	case Just(rest): currentText = rest;
+	case Nothing: return result.map(function(text) return text.pad(w, alignment));
+	}
       }
     }
   }
