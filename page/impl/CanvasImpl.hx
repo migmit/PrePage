@@ -1,13 +1,18 @@
 package page.impl;
 
-class ArrayCanvas<L, S> extends Canvas<L, S> {
+import prelude.Maybe;
+
+using prelude.Maybe.MaybeExt;
+
+class ArrayCanvas<L, S> implements Canvas<L, S> {
   var value: Array<L>;
   public function length(): Int {
     return value.length;
   }
-  public function add(l: L, i: Int, h: S -> Void): Bool {
-    if (i > value.length) return false;
-    value.insert(i, l);
+  public function addAfter(l: L, i: Maybe<Int>, h: S -> Void): Bool {
+    var index = i.map(function(n) return n+1).getOrElse(0);
+    if (index > value.length) return false;
+    value.insert(index, l);
     return true;
   }
   public function remove(i: Int): Bool {
@@ -17,6 +22,5 @@ class ArrayCanvas<L, S> extends Canvas<L, S> {
   }
   public function new(value: Array<L>) {
     this.value = value.copy();
-    super(length, add, remove);
   }
 }

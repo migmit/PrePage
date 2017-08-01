@@ -4,7 +4,7 @@ import prelude.Maybe;
 
 using prelude.Maybe.MaybeExt;
 
-class PageImpl<L, S> extends Page<L, S> {
+class PageImpl<L, S> implements Page<L, S> {
   var canvas: Canvas<L, S>;
   var firstPosition: Maybe<PositionImpl>;
   var handler: S -> Void;
@@ -12,17 +12,16 @@ class PageImpl<L, S> extends Page<L, S> {
     this.canvas = canvas;
     this.firstPosition = Nothing;
     this.handler = handler;
-    super(addLine);
   }
   public function addLine(line: L, after: Maybe<Cell<L>>): Maybe<Cell<L>> {
-    return after.map(function(cell) return cell._addAfter(line)).getOrElse(addAfter(line, Nothing));
+    return after.map(function(cell) return cell.addAfter(line)).getOrElse(addAfter(line, Nothing));
   }
   public function addAfter(line: L, after: Maybe<CellImpl<L, S>>): Maybe<Cell<L>> {
-    var index = after.map(function(cell) return cell.position.position + 1).getOrElse(0);
-    if (canvas._add(line, index, handler)) {
+    var index = after.map(function(cell) return cell.position.position);
+    if (canvas.addAfter(line, index, handler)) {
       var next = after.map(function(cell) return cell.position.next).getOrElse(firstPosition);
       var pos: PositionImpl = {
-      position: index,
+      position: index.map(function(i) return i+1).getOrElse(0),
       next: next,
       prev: after.map(function(cell) return cell.position)
       };
@@ -59,8 +58,8 @@ class PageImpl<L, S> extends Page<L, S> {
   }
   public function remove(cell: CellImpl<L, S>) {
     var pos = cell.position.position;
-    if (pos >= 0 && pos < canvas._length()) {
-      canvas._remove(pos);
+    if (pos >= 0 && pos < canvas.length()) {
+      canvas.remove(pos);
       cell.position.position = -1;
       var next = cell.position.next;
       var prev = cell.position.prev;

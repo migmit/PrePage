@@ -4,23 +4,26 @@ import js.html.Element;
 import js.html.Node;
 
 import page.Canvas;
+import prelude.Maybe;
 import text.Text;
 import text.TextStyle;
 
 using StringTools;
 
-class Pre<S> extends Canvas<Line<S>, S> {
+using prelude.Maybe.MaybeExt;
+
+class Pre<S> implements Canvas<Line<S>, S> {
   var pre: Element;
   public function new(pre: Element) {
     this.pre = pre;
-    super(length, add, remove);
   }
   public function length(): Int {
     return pre.children.length;
   }
-  public function add(line: Line<S>, position: Int, handler: S -> Void): Bool {
+  public function addAfter(line: Line<S>, position: Maybe<Int>, handler: S -> Void): Bool {
+    var pos = position.map(function(p) return p+1).getOrElse(0);
     var l = length();
-    if (position < 0 || position > l) return false;
+    if (pos < 0 || pos > l) return false;
     var span = pre.ownerDocument.createSpanElement();
     switch(line) {
     case PlainLine(value): addText(span, value, handler);
@@ -29,7 +32,7 @@ class Pre<S> extends Canvas<Line<S>, S> {
       addContent(span, content, contentWidth);
       addText(span, right, handler);
     }
-    if (position == l) pre.appendChild(span) else pre.insertBefore(span, pre.children[position]);
+    if (pos == l) pre.appendChild(span) else pre.insertBefore(span, pre.children[pos]);
     return true;
   }
   public function remove(position: Int): Bool {

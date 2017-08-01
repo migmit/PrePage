@@ -2,13 +2,12 @@ package page.impl;
 
 import prelude.Maybe;
 
-class CellImpl<L, S> extends Cell<L> {
+class CellImpl<L, S> implements Cell<L> {
   public var page(default, null): PageImpl<L, S>;
   public var position(default, null): PositionImpl;
   public function new(page: PageImpl<L, S>, position: PositionImpl) {
     this.page = page;
     this.position = position;
-    super(next, prev, isShown, remove, addAfter);
   }
   public function next(): Maybe<Cell<L>> {
     return page.next(this);
