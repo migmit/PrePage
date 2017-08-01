@@ -1,3 +1,4 @@
+import page.Canvas;
 import tag.TextColor;
 import text.Action;
 import text.Slice;
