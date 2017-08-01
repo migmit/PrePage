@@ -4,8 +4,8 @@ import prelude.Maybe;
 
 class CellImpl<L, S> extends Cell<L> {
   public var page(default, null): PageImpl<L, S>;
-  public var position(default, null): Position;
-  public function new(page: PageImpl<L, S>, position: Position) {
+  public var position(default, null): PositionImpl;
+  public function new(page: PageImpl<L, S>, position: PositionImpl) {
     this.page = page;
     this.position = position;
     super(next, prev, isShown, remove, addAfter);

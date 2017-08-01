@@ -6,7 +6,7 @@ using prelude.Maybe.MaybeExt;
 
 class PageImpl<L, S> extends Page<L, S> {
   var canvas: Canvas<L, S>;
-  var firstPosition: Maybe<Position>;
+  var firstPosition: Maybe<PositionImpl>;
   var handler: S -> Void;
   public function new(canvas: Canvas<L, S>, handler: S -> Void) {
     this.canvas = canvas;
@@ -21,7 +21,7 @@ class PageImpl<L, S> extends Page<L, S> {
     var index = after.map(function(cell) return cell.position.position + 1).getOrElse(0);
     if (canvas._add(line, index, handler)) {
       var next = after.map(function(cell) return cell.position.next).getOrElse(firstPosition);
-      var pos: Position = {
+      var pos: PositionImpl = {
       position: index,
       next: next,
       prev: after.map(function(cell) return cell.position)

@@ -2,8 +2,8 @@ package page.impl;
 
 import prelude.Maybe;
 
-typedef Position = {
+typedef PositionImpl = {
  position: Int,
- next: Maybe<Position>,
- prev: Maybe<Position>
+ next: Maybe<PositionImpl>,
+ prev: Maybe<PositionImpl>
 }
