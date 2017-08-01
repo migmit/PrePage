@@ -3,8 +3,10 @@ package text;
 import prelude.Maybe;
 import prelude.Pair;
 
+using prelude.Maybe.MaybeExt;
 using prelude.String.StringExt;
 using tag.Tag.TagExt;
+using text.Action.ActionExt;
 
 class Slice<S> {
   public var text(default, null): String;
@@ -31,6 +33,9 @@ class Slice<S> {
   }
   public function trimRight(): Slice<S> {
     return new Slice(text.trimRight(), style, action);
+  }
+  public function map<T>(f: S -> T): Slice<T> {
+    return new Slice(text, style, action.map(function(a) return a.map(f)));
   }
   public function render(): String{
     var styleTags = style.toTags();

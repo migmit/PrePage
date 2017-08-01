@@ -112,6 +112,9 @@ class Text<S> {
       }
     }
   }
+  public function map<T>(f: S -> T): Text<T> {
+    return new Text(value.map(function(slice) return slice.map(f)));
+  }
   public function render(): String {
     return value.map(function(s) return s.render()).join("");
   }
