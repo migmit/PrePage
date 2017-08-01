@@ -1,4 +1,5 @@
-import page.Canvas;
+import page.impl.CanvasImpl.ArrayCanvas;
+import page.impl.PageImpl;
 import tag.TextColor;
 import text.Action;
 import text.Slice;
