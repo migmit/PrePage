@@ -32,6 +32,7 @@ class Pre<S> implements Canvas<Line<S>, S, Element> {
       addContent(span, content, contentWidth);
       addText(span, right, handler);
     }
+    span.appendChild(pre.ownerDocument.createTextNode("\n"));
     switch(position) {
     case Just(line):
       var nextLine = line.nextSibling;

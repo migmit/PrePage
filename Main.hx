@@ -1,4 +1,3 @@
-import line.ElementPos;
 import line.Pre;
 import page.Page;
 import tag.TextColor;
