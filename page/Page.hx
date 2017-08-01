@@ -7,7 +7,7 @@ interface Page<L, S> {
 }
 
 class AttachPage{
-  static public function attach<L, S>(canvas: Canvas<L, S>, handler: S -> Void): Page<L, S> {
-    return new page.impl.PageImpl(canvas, handler);
+  static public function attach<L, S, P>(canvas: Canvas<L, S, P>, handler: S -> Void, isPosition: Position<P>): Page<L, S> {
+    return new page.impl.PageImpl(canvas, handler, isPosition);
   }
 }

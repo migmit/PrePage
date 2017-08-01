@@ -1,5 +1,5 @@
+import line.ElementPos;
 import line.Pre;
-import page.impl.CanvasImpl.ArrayCanvas;
 import page.Page;
 import tag.TextColor;
 import text.Action;

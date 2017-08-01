@@ -4,6 +4,7 @@ import js.html.Element;
 import js.html.Node;
 
 import page.Canvas;
+import page.Page;
 import prelude.Maybe;
 import text.Text;
 import text.TextStyle;
@@ -12,18 +13,17 @@ using StringTools;
 
 using prelude.Maybe.MaybeExt;
 
-class Pre<S> implements Canvas<Line<S>, S> {
+class Pre<S> implements Canvas<Line<S>, S, Element> {
   var pre: Element;
   public function new(pre: Element) {
     this.pre = pre;
   }
-  public function length(): Int {
-    return pre.children.length;
+  public function getPosition(n: Int): Maybe<Element> {
+    var children = pre.children;
+    if (n < 0 || n >= children.length) return Nothing;
+    return Just(children[n]);
   }
-  public function addAfter(line: Line<S>, position: Maybe<Int>, handler: S -> Void): Bool {
-    var pos = position.map(function(p) return p+1).getOrElse(0);
-    var l = length();
-    if (pos < 0 || pos > l) return false;
+  public function addAfter(line: Line<S>, position: Maybe<Element>, handler: S -> Void): Maybe<Element> {
     var span = pre.ownerDocument.createSpanElement();
     switch(line) {
     case PlainLine(value): addText(span, value, handler);
@@ -32,13 +32,13 @@ class Pre<S> implements Canvas<Line<S>, S> {
       addContent(span, content, contentWidth);
       addText(span, right, handler);
     }
-    if (pos == l) pre.appendChild(span) else pre.insertBefore(span, pre.children[pos]);
-    return true;
-  }
-  public function remove(position: Int): Bool {
-    if (position < 0 || position >= length()) return false;
-    pre.removeChild(pre.children[position]);
-    return true;
+    switch(position) {
+    case Just(line):
+      var nextLine = line.nextSibling;
+      if (nextLine == null) pre.appendChild(span) else pre.insertBefore(span, nextLine);
+    case Nothing: pre.insertBefore(span, pre.children[0]);
+    }
+    return Just((span: Element));
   }
   function addSimpleText(to: Element, text: String, style: TextStyle) {
     var doc = to.ownerDocument;
@@ -84,5 +84,8 @@ class Pre<S> implements Canvas<Line<S>, S> {
     content.style.position = "absolute";
     span.appendChild(content);
     span.appendChild(span.ownerDocument.createTextNode("".rpad(" ", contentWidth)));
+  }
+  static public function attach<S>(pre: Element, handler: S -> Void): Page<Line<S>, S> {
+    return page.Page.AttachPage.attach(new Pre(pre), handler, ElementPos.isPosition);
   }
 }

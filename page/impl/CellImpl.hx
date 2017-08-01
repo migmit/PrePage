@@ -2,24 +2,28 @@ package page.impl;
 
 import prelude.Maybe;
 
-class CellImpl<L, S> implements Cell<L> {
-  public var page(default, null): PageImpl<L, S>;
-  public var position(default, null): PositionImpl;
-  public function new(page: PageImpl<L, S>, position: PositionImpl) {
+using prelude.Maybe.MaybeExt;
+
+class CellImpl<L, S, P> implements Cell<L> {
+  public var page(default, null): PageImpl<L, S, P>;
+  public var position(default, null): P;
+  public var isPosition(default, null): Position<P>;
+  public function new(page: PageImpl<L, S, P>, position: P, isPosition: Position<P>) {
     this.page = page;
     this.position = position;
+    this.isPosition = isPosition;
   }
   public function next(): Maybe<Cell<L>> {
-    return page.next(this);
+    return isPosition.next(position).map(function(pos) return (new CellImpl(page, pos, isPosition): Cell<L>));
   }
   public function prev(): Maybe<Cell<L>> {
-    return page.prev(this);
+    return isPosition.prev(position).map(function(pos) return (new CellImpl(page, pos, isPosition): Cell<L>));
   }
   public function isShown(): Bool {
-    return page.isShown(this);
+    return isPosition.isShown(position);
   }
   public function remove() {
-    page.remove(this);
+    return isPosition.remove(position);
   }
   public function addAfter(line: L): Maybe<Cell<L>> {
     return page.addAfter(line, Just(this));

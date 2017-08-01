@@ -2,8 +2,7 @@ package page;
 
 import prelude.Maybe;
 
-interface Canvas<L, S> {
-  public function length(): Int;
-  public function addAfter(line: L, position: Maybe<Int>, handler: S -> Void): Bool;
-  public function remove(line: Int): Bool;
+interface Canvas<L, S, P> {
+  public function getPosition(n: Int): Maybe<P>;
+  public function addAfter(line: L, position: Maybe<P>, handler: S -> Void): Maybe<P>;
 }
