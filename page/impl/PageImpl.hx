@@ -4,20 +4,22 @@ import prelude.Maybe;
 
 using prelude.Maybe.MaybeExt;
 
-class PageImpl<L> extends Page<L> {
-  var canvas: Canvas<L>;
+class PageImpl<L, S> extends Page<L, S> {
+  var canvas: Canvas<L, S>;
   var firstPosition: Maybe<Position>;
-  public function new(canvas: Canvas<L>) {
+  var handler: S -> Void;
+  public function new(canvas: Canvas<L, S>, handler: S -> Void) {
     this.canvas = canvas;
     this.firstPosition = Nothing;
+    this.handler = handler;
     super(addLine);
   }
   public function addLine(line: L, after: Maybe<Cell<L>>): Maybe<Cell<L>> {
     return after.map(function(cell) return cell._addAfter(line)).getOrElse(addAfter(line, Nothing));
   }
-  public function addAfter(line: L, after: Maybe<CellImpl<L>>): Maybe<Cell<L>> {
+  public function addAfter(line: L, after: Maybe<CellImpl<L, S>>): Maybe<Cell<L>> {
     var index = after.map(function(cell) return cell.position.position + 1).getOrElse(0);
-    if (canvas._add(line, index)) {
+    if (canvas._add(line, index, handler)) {
       var next = after.map(function(cell) return cell.position.next).getOrElse(firstPosition);
       var pos: Position = {
       position: index,
@@ -40,22 +42,22 @@ class PageImpl<L> extends Page<L> {
       return Nothing;
     }
   }
-  public function next(cell: CellImpl<L>): Maybe<Cell<L>> {
+  public function next(cell: CellImpl<L, S>): Maybe<Cell<L>> {
     if (cell.page != this) return Nothing;
     var curr = cell.position;
     if (curr.position < 0) return Nothing;
     return curr.next.map(function(n) return (new CellImpl(this, n): Cell<L>));
   }
-  public function prev(cell: CellImpl<L>): Maybe<Cell<L>> {
+  public function prev(cell: CellImpl<L, S>): Maybe<Cell<L>> {
     if (cell.page != this) return Nothing;
     var curr = cell.position;
     if (curr.position < 0) return Nothing;
     return curr.prev.map(function(p) return (new CellImpl(this, p): Cell<L>));
   }
-  public function isShown(cell: CellImpl<L>): Bool {
+  public function isShown(cell: CellImpl<L, S>): Bool {
     return cell.position.position >= 0;
   }
-  public function remove(cell: CellImpl<L>) {
+  public function remove(cell: CellImpl<L, S>) {
     var pos = cell.position.position;
     if (pos >= 0 && pos < canvas._length()) {
       canvas._remove(pos);

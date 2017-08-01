@@ -1,11 +1,11 @@
 package page.impl;
 
-class ArrayCanvas<L> extends Canvas<L> {
+class ArrayCanvas<L, S> extends Canvas<L, S> {
   var value: Array<L>;
   public function length(): Int {
     return value.length;
   }
-  public function add(l: L, i: Int): Bool {
+  public function add(l: L, i: Int, h: S -> Void): Bool {
     if (i > value.length) return false;
     value.insert(i, l);
     return true;
