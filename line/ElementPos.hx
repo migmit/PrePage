@@ -6,7 +6,7 @@ import page.Position;
 import prelude.Maybe;
 
 class ElementPos implements Position<Element> {
-  public function new() {}
+  function new() {}
   public function next(current: Element): Maybe<Element> {
     var result = current.nextElementSibling;
     if (result == null) return Nothing;

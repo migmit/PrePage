@@ -1,5 +1,6 @@
 package line;
 
+import js.html.HTMLDocument;
 import js.html.Element;
 import js.html.Node;
 
@@ -15,8 +16,10 @@ using prelude.Maybe.MaybeExt;
 
 class Pre<S> implements Canvas<Line<S>, S, Element> {
   var pre: Element;
+  var doc: HTMLDocument;
   public function new(pre: Element) {
     this.pre = pre;
+    this.doc = pre.ownerDocument;
   }
   public function getPosition(n: Int): Maybe<Element> {
     var children = pre.children;
@@ -24,7 +27,7 @@ class Pre<S> implements Canvas<Line<S>, S, Element> {
     return Just(children[n]);
   }
   public function addAfter(line: Line<S>, position: Maybe<Element>, handler: S -> Void): Maybe<Element> {
-    var span = pre.ownerDocument.createSpanElement();
+    var span = doc.createSpanElement();
     switch(line) {
     case PlainLine(value): addText(span, value, handler);
     case ComplexLine(left, content, contentWidth, right):
@@ -32,7 +35,7 @@ class Pre<S> implements Canvas<Line<S>, S, Element> {
       addContent(span, content, contentWidth);
       addText(span, right, handler);
     }
-    span.appendChild(pre.ownerDocument.createTextNode("\n"));
+    span.appendChild(doc.createTextNode("\n"));
     switch(position) {
     case Just(line):
       var nextLine = line.nextSibling;
@@ -42,7 +45,6 @@ class Pre<S> implements Canvas<Line<S>, S, Element> {
     return Just((span: Element));
   }
   function addSimpleText(to: Element, text: String, style: TextStyle) {
-    var doc = to.ownerDocument;
     var toAdd: Node = doc.createTextNode(text);
     if (style.italic) {
       var i = doc.createElement("I");
@@ -69,12 +71,12 @@ class Pre<S> implements Canvas<Line<S>, S, Element> {
       switch(slice.action) {
       case Nothing: addSimpleText(span, slice.text, slice.style);
       case Just(Link(url)):
-	var a = span.ownerDocument.createAnchorElement();
+	var a = doc.createAnchorElement();
 	a.href = url;
 	addSimpleText(a, slice.text, slice.style);
 	span.appendChild(a);
       case Just(Signal(s)):
-	var sp = span.ownerDocument.createSpanElement();
+	var sp = doc.createSpanElement();
 	sp.onclick = function() handler(s);
 	addSimpleText(sp, slice.text, slice.style);
 	span.appendChild(sp);
@@ -84,7 +86,7 @@ class Pre<S> implements Canvas<Line<S>, S, Element> {
   function addContent(span: Element, content: Element, contentWidth: Int) {
     content.style.position = "absolute";
     span.appendChild(content);
-    span.appendChild(span.ownerDocument.createTextNode("".rpad(" ", contentWidth)));
+    span.appendChild(doc.createTextNode("".rpad(" ", contentWidth)));
   }
   static public function attach<S>(pre: Element, handler: S -> Void): Page<Line<S>, S> {
     return page.Page.AttachPage.attach(new Pre(pre), handler, ElementPos.isPosition);
