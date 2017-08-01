@@ -10,9 +10,9 @@ using prelude.Maybe.MaybeExt;
 using tag.Tag.TagExt;
 
 class TextStyle {
-  var bold: Bool;
-  var italic: Bool;
-  var color: Maybe<TextColor>;
+  public var bold(default, null): Bool;
+  public var italic(default, null): Bool;
+  public var color(default, null): Maybe<TextColor>;
   public function new(bold: Bool, italic: Bool, color: Maybe<TextColor>) {
     this.bold = bold;
     this.italic = italic;

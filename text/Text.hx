@@ -9,7 +9,7 @@ using prelude.Array.ArrayExt;
 using prelude.Maybe.MaybeExt;
 
 class Text<S> {
-  var value: Array<Slice<S>>;
+  public var value(default, null): Array<Slice<S>>;
   public function new(value: Array<Slice<S>>) {
     this.value = value;
   }

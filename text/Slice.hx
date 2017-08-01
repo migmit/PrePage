@@ -8,8 +8,8 @@ using tag.Tag.TagExt;
 
 class Slice<S> {
   public var text(default, null): String;
-  var style: TextStyle;
-  var action: Maybe<Action<S>>;
+  public var style(default, null): TextStyle;
+  public var action(default, null): Maybe<Action<S>>;
   public function new(text: String, style: TextStyle, action: Maybe<Action<S>>) {
     this.text = text;
     this.style = style;
