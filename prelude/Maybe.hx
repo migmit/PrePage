@@ -26,4 +26,7 @@ class MaybeExt {
   static public function isDefined<T>(m: Maybe<T>): Bool {
     return m.map(function(_) return true).getOrElse(false);
   }
+  static public function just<T>(t: T): Maybe<T> {
+    return Just(t);
+  }
 }
