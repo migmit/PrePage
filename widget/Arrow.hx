@@ -5,7 +5,7 @@ import prelude.Pair;
 using prelude.Maybe.MaybeExt;
 
 abstract Arrow<I, O>(Maybe<I -> Maybe<O>>) from (Maybe<I -> Maybe<O>>) {
-  function content(): Maybe<I -> Maybe<O>> {
+  inline function content(): Maybe<I -> Maybe<O>> {
     return this;
   }
   @:op(A >> B)
