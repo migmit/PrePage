@@ -8,6 +8,7 @@ import text.TextStyle;
 import widget.Arrow;
 import widget.Widget;
 
+using prelude.Maybe.MaybeExt;
 using tag.Tag.TagExt;
 
 class Main {
@@ -20,6 +21,7 @@ class Main {
       t.splitWidth(i, Center).map(function(t) trace(">" + t.plain() + "<"));
     }
     */
+    /*
     var boldStyle = new TextStyle(true, false, Nothing);
     var italicStyle = new TextStyle(false, true, Nothing);
     var italicLighterStyle = new TextStyle(false, true, Just(new TextColor(1,1,1)));
@@ -33,5 +35,13 @@ class Main {
       trace(i);
       tt.splitWidth(i, Center).map(function(l) trace(">" + l.render() + "<"));
     }
+    */
+    var a = Arrow.pure(function(n: Int) return n+1);
+    var b = Arrow.impure(function(n: Int) return Just(2*n));
+    var c = Arrow.omit();
+    trace((a >> b).isDefined());
+    trace((a >> c).isDefined());
+    trace((b >> c).isDefined());
+    trace((a >> b).call(5).getOrElse(-1));
   }
 }

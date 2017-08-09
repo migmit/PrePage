@@ -36,4 +36,10 @@ abstract Arrow<I, O>(Maybe<I -> Maybe<O>>) from (Maybe<I -> Maybe<O>>) {
       case Pair(s, i): return io(i).map(function(o) return Pair(s, o));
       });
   }
+  inline public function call(i: I): Maybe<O> {
+    return this.flatMap(function(io) return io(i));
+  }
+  inline public function isDefined(): Bool {
+    return this.isDefined();
+  }
 }
