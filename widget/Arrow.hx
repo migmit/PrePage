@@ -24,6 +24,9 @@ abstract Arrow<I, O>(Maybe<I -> Maybe<O>>) from (Maybe<I -> Maybe<O>>) {
   inline static public function impure<I, O>(f: I -> Maybe<O>): Arrow<I, O> {
     return Just(f);
   }
+  inline static public function id<I>(): Arrow<I, I> {
+    return pure(function(i) return i);
+  }
   inline public function left<S>(): Arrow<Pair<I, S>, Pair<O, S>> {
     return this.map
       (function(io) return function(is) switch(is) {
