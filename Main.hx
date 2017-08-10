@@ -1,5 +1,7 @@
-import line.Pre;
-import page.Page;
+import line.Line;
+import prelude.Either;
+import prelude.Pair;
+import prelude.Unit;
 import tag.TextColor;
 import text.Action;
 import text.Slice;
@@ -9,7 +11,9 @@ import widget.Arrow;
 import widget.Widget;
 
 using prelude.Maybe.MaybeExt;
+using prelude.Pair.PairExt;
 using tag.Tag.TagExt;
+using widget.Widget.WidgetExt;
 
 class Main {
   static public function main() {
@@ -43,5 +47,15 @@ class Main {
     trace((a >> c).isDefined());
     trace((b >> c).isDefined());
     trace((a >> b).call(5).getOrElse(-1));
+    var testWidget1 =
+      Widget.array
+      ([Widget.line(PlainLine(new Text([new Slice("+", TextStyle.dflt, Just(Signal(Unit)))]))),
+	Widget.void().chameleon().filterMapIn
+	(function(p: Pair<Unit, Int>) return Just(Right(Widget.line(PlainLine(new Text([new Slice(Std.string(p.snd() + 1), TextStyle.dflt, Nothing)])))))).state(0).filterMap
+	(function(u) return Just(Right(Pair(Just(u), function(n) return n+1))),
+	 function(p) return p.fst()
+	 )
+	]).mirror();
+    $type(testWidget1);
   }
 }
