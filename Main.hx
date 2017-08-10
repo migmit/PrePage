@@ -49,9 +49,9 @@ class Main {
     trace((a >> b).call(5).getOrElse(-1));
     var testWidget1 =
       Widget.array
-      ([Widget.line(PlainLine(new Text([new Slice("+", TextStyle.dflt, Just(Signal(Unit)))]))),
+      ([Widget.line(PlainLine([new Slice("+", TextStyle.dflt, Just(Signal(Unit)))])),
 	Widget.void().chameleon().filterMapIn
-	(function(p: Pair<Unit, Int>) return Just(Right(Widget.line(PlainLine(new Text([new Slice(Std.string(p.snd() + 1), TextStyle.dflt, Nothing)])))))).state(0).filterMap
+	(function(p: Pair<Unit, Int>) return Just(Right(Widget.line(PlainLine([new Slice(Std.string(p.snd() + 1), TextStyle.dflt, Nothing)]))))).state(0).filterMap
 	(function(u) return Just(Right(Pair(Just(u), function(n) return n+1))),
 	 function(p) return p.fst()
 	 )
