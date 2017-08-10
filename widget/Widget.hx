@@ -37,8 +37,9 @@ abstract Widget<I, O>(Array<WidgetNode<I, O>>) from Array<WidgetNode<I, O>> to A
   public function chameleon(): Widget<Either<I, Widget<I, O>>, O> {
     return [(new Chameleon(this, MaybeExt.just): WidgetNode<Either<I, Widget<I, O>>, O>)];
   }
+  @:impl
   static public function state<I, S, O>
-  (widget: Widget<Pair<I, S>, O>,
+  (widget: Array<WidgetNode<Pair<I, S>, O>>,
    initial: S
    ): Widget<Either<I, Pair<Maybe<I>, S -> S>>, Pair<O, S>> {
     var result: State<Either<I, Pair<Maybe<I>, S -> S>>, I, S, O, Pair<O, S>> = new State
@@ -51,7 +52,8 @@ abstract Widget<I, O>(Array<WidgetNode<I, O>>) from Array<WidgetNode<I, O>> to A
        );
     return [(result: WidgetNode<Either<I, Pair<Maybe<I>, S -> S>>, Pair<O, S>>)];
   }
-  static public function mirror<L>(widget: Widget<L, L>): Widget<L, L> {
+  @:impl
+  static public function mirror<L>(widget: Array<WidgetNode<L, L>>): Widget<L, L> {
     return [(new Mirror(widget, MaybeExt.just, MaybeExt.just): WidgetNode<L, L>)];
   }
   public function filterMapIn<II>(f: II -> Maybe<I>): Widget<II, O> {
@@ -59,18 +61,6 @@ abstract Widget<I, O>(Array<WidgetNode<I, O>>) from Array<WidgetNode<I, O>> to A
   }
   public function filterMapOut<OO>(f: O -> Maybe<OO>): Widget<I, OO> {
     return this.map(function(n) return n.filterMapOut(f));
-  }
-}
-
-class WidgetExt {
-  static public function state<I, S, O>
-  (widget: Widget<Pair<I, S>, O>,
-   initial: S
-   ): Widget<Either<I, Pair<Maybe<I>, S -> S>>, Pair<O, S>> {
-    return Widget.state(widget, initial);
-  }
-  static public function mirror<L>(widget: Widget<L, L>): Widget<L, L> {
-    return Widget.mirror(widget);
   }
 }
 

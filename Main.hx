@@ -13,7 +13,6 @@ import widget.Widget;
 using prelude.Maybe.MaybeExt;
 using prelude.Pair.PairExt;
 using tag.Tag.TagExt;
-using widget.Widget.WidgetExt;
 
 class Main {
   static public function main() {
